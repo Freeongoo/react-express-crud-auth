@@ -2,7 +2,7 @@
 export default {
 
     getUserList(success) {
-        fetch('/userList.json')
+        fetch('/users')
             .then((res) => res.json())
             .then(success)
             .catch((data) => {
