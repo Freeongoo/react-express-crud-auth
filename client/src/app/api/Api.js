@@ -1,4 +1,3 @@
-// Fake API ;)
 export default {
 
     getUserList(success) {
@@ -11,12 +10,9 @@ export default {
     },
 
     getUserById(id, success) {
-        fetch('/userList.json')
+        fetch('/users/' + id)
             .then((res) => res.json())
-            .then((data) => {
-                let result = data.find(x => Number(x.id) === Number(id));
-                success(result)
-            })
+            .then(success)
             .catch((data) => {
                 console.log('error', data)
             })

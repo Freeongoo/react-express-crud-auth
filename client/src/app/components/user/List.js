@@ -16,13 +16,13 @@ export default function List(props) {
             <tbody>
             {props.userList.map((item, index) => {
                 return (
-                    <tr key={item.id}>
+                    <tr key={item._id}>
                         <th scope="row">{++index}</th>
                         <td>{item.firstName}</td>
                         <td>{item.lastName}</td>
                         <td>{item.email}</td>
                         <td>
-                            <Link className="btn btn-primary" to={"/user/edit/" + item.id}>edit</Link>
+                            <Link className="btn btn-primary" to={"/user/edit/" + item._id}>edit</Link>
                         </td>
                     </tr>
                 )
