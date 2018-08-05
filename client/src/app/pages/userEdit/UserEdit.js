@@ -1,7 +1,6 @@
 import React, {Component} from 'react'
 import Navigation from "../../components/nav/Navigation"
 import Api from "../../api/Api"
-import _ from 'lodash'
 import FormData from "../../components/user/FormData"
 import { Redirect } from "react-router-dom"
 
@@ -17,7 +16,8 @@ class UserEdit extends Component {
                 lastName: '',
                 email: ''
             },
-            isRedirectToList: false
+            isRedirectToList: false,
+            isNotFoundUser: false
         }
 
         this.handleChange = this.handleChange.bind(this);
@@ -51,8 +51,12 @@ class UserEdit extends Component {
         Api.getUserById(currentUserId)
             .then((data) => {this.setState({user: data})})
             .catch((error) => {
-                // TODO: correct handle error
-                console.log('error', error)
+                if (error.response.status === 404) {
+                    this.setState({isNotFoundUser: true})
+                } else {
+                    // TODO: correct handle error
+                    console.log('error', error)
+                }
             })
     }
 
@@ -64,7 +68,7 @@ class UserEdit extends Component {
             return <Redirect to="/" />;
         }
 
-        let content = _.isEmpty(this.state.user) ?
+        let content = this.state.isNotFoundUser ?
             <p>Sorry, user not found</p> :
             <FormData handleChange={this.handleChange} handleSubmit={this.handleSubmit} user={this.state.user}/>
 

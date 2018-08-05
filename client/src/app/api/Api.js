@@ -4,13 +4,13 @@ export default {
 
     getUserList() {
         return fetch(USER_PREFIX_URL)
-            .then(status)
+            .then(handleStatus)
             .then((res) => res.json())
     },
 
     getUserById(id) {
         return fetch(USER_PREFIX_URL + id)
-            .then(status)
+            .then(handleStatus)
             .then((res) => res.json())
     },
 
@@ -19,7 +19,7 @@ export default {
             {
                 method: "DELETE",
             })
-            .then(status)
+            .then(handleStatus)
             .then((res) => res.json())
     },
 
@@ -30,7 +30,7 @@ export default {
                 headers: getJsonHeader(),
                 body: JSON.stringify(data)
             })
-            .then(status)
+            .then(handleStatus)
             .then((res) => res.json())
     },
 
@@ -41,7 +41,7 @@ export default {
                 headers: getJsonHeader(),
                 body: JSON.stringify(data)
             })
-            .then(status)
+            .then(handleStatus)
             .then((res) => res.json())
     }
 }
@@ -53,10 +53,12 @@ function getJsonHeader() {
     }
 }
 
-function status(response) {
+function handleStatus(response) {
     if (response.status >= 200 && response.status < 300) {
         return Promise.resolve(response)
     } else {
-        return Promise.reject(new Error(response.statusText))
+        let error = new Error(response.statusText || response.status)
+        error.response = response
+        return Promise.reject(error)
     }
 }
