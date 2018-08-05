@@ -26,7 +26,12 @@ class UserEdit extends Component {
 
     handleSubmit(event) {
         event.preventDefault();
-        Api.updateUser(this.state.user._id, this.state.user, () => {this.setState({isRedirectToList: true})})
+        Api.updateUser(this.state.user._id, this.state.user)
+            .then(() => {this.setState({isRedirectToList: true})})
+            .catch((error) => {
+                // TODO: correct handle error
+                console.log('error', error)
+            })
     }
 
     handleChange (event) {
@@ -41,8 +46,14 @@ class UserEdit extends Component {
     componentDidMount() {
         let currentUserId = this.props.match.params.userId
 
-        if (currentUserId)
-            Api.getUserById(currentUserId, (data) => {this.setState({user: data})})
+        if (!currentUserId) return
+
+        Api.getUserById(currentUserId)
+            .then((data) => {this.setState({user: data})})
+            .catch((error) => {
+                // TODO: correct handle error
+                console.log('error', error)
+            })
     }
 
     render() {

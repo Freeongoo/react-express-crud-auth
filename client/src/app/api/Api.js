@@ -2,41 +2,29 @@ const USER_PREFIX_URL = '/users/'
 
 export default {
 
-    getUserList(success) {
-        fetch(USER_PREFIX_URL)
+    getUserList() {
+        return fetch(USER_PREFIX_URL)
             .then(status)
             .then((res) => res.json())
-            .then(success)
-            .catch((error) => {
-                console.log('error', error)
-            })
     },
 
-    getUserById(id, success) {
-        fetch(USER_PREFIX_URL + id)
+    getUserById(id) {
+        return fetch(USER_PREFIX_URL + id)
             .then(status)
             .then((res) => res.json())
-            .then(success)
-            .catch((error) => {
-                console.log('error', error)
-            })
     },
 
-    deleteUser(id, success) {
-        fetch(USER_PREFIX_URL + id,
+    deleteUser(id) {
+        return fetch(USER_PREFIX_URL + id,
             {
                 method: "DELETE",
             })
             .then(status)
             .then((res) => res.json())
-            .then(success)
-            .catch(function (error) {
-                console.log('error', error)
-            });
     },
 
-    createNewUser(data, success) {
-        fetch(USER_PREFIX_URL,
+    createNewUser(data) {
+        return fetch(USER_PREFIX_URL,
             {
                 method: "POST",
                 headers: getJsonHeader(),
@@ -44,14 +32,10 @@ export default {
             })
             .then(status)
             .then((res) => res.json())
-            .then(success)
-            .catch(function (error) {
-                console.log('error', error)
-            });
     },
 
-    updateUser(id, data, success) {
-        fetch(USER_PREFIX_URL + id,
+    updateUser(id, data) {
+        return fetch(USER_PREFIX_URL + id,
             {
                 method: "PATCH",
                 headers: getJsonHeader(),
@@ -59,10 +43,6 @@ export default {
             })
             .then(status)
             .then((res) => res.json())
-            .then(success)
-            .catch(function (error) {
-                console.log('error', error)
-            });
     }
 }
 

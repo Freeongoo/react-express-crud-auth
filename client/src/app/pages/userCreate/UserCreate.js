@@ -24,7 +24,12 @@ class UserCreate extends Component {
 
     handleSubmit(event) {
         event.preventDefault();
-        Api.createNewUser(this.state.user, () => {this.setState({isRedirectToList: true})})
+        Api.createNewUser(this.state.user)
+            .then(() => {this.setState({isRedirectToList: true})})
+            .catch((error) => {
+                // TODO: correct handle error
+                console.log('error', error)
+            })
     }
 
     handleChange (event) {

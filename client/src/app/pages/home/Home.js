@@ -17,17 +17,27 @@ class Home extends Component {
     }
 
     componentDidMount() {
-        Api.getUserList((data) => {this.setState({userList: data})})
+        Api.getUserList()
+            .then((data) => {this.setState({userList: data})})
+            .catch((error) => {
+                // TODO: correct handle error
+                console.log('error', error)
+            })
     }
 
     handleDelete(userId) {
         if (!window.confirm("Are you sure you want to delete?")) return;
 
-        Api.deleteUser(userId, (data) => {
-            this.setState({userList: this.state.userList.filter(function(user) {
-                return user._id !== userId
-            })});
-        })
+        Api.deleteUser(userId)
+            .then(() => {
+                this.setState({userList: this.state.userList.filter(function(user) {
+                    return user._id !== userId
+                })});
+            })
+            .catch((error) => {
+                // TODO: correct handle error
+                console.log('error', error)
+            })
     }
 
     render() {
