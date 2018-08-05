@@ -26,7 +26,6 @@ class UserEdit extends Component {
 
     handleSubmit(event) {
         event.preventDefault();
-        console.log(this.state.user._id)
         Api.updateUser(this.state.user._id, this.state.user, () => {this.setState({isRedirectToList: true})})
     }
 

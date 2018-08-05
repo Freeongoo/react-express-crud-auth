@@ -62,23 +62,15 @@ router.patch('/:id', function(req, res, next) {
         email
     }
 
-    try {
-        users.find({_id: id}, {}, function (e, data) {
-            let findUser = data[0]
-
-            users.update(findUser,
-                { $set: updatedUser },
-                function (error, doc) {
-                    if (error) {
-                        res.status(400).send({ error: error.message });
-                    } else {
-                        res.status(200).send({ msg: "success" });
-                    }
-                });
+    users.update({ _id: id },
+        { $set: updatedUser },
+        function (error, doc) {
+            if (error) {
+                res.status(400).send({ error: error.message });
+            } else {
+                res.status(200).send({ msg: "success" });
+            }
         });
-    } catch (e) {
-        res.status(404).send({ error: "User not exist" });
-    }
 });
 
 module.exports = router;
