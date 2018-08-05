@@ -12,10 +12,22 @@ class Home extends Component {
         this.state = {
             userList: []
         }
+
+        this.handleDelete = this.handleDelete.bind(this);
     }
 
     componentDidMount() {
         Api.getUserList((data) => {this.setState({userList: data})})
+    }
+
+    handleDelete(userId) {
+        if (!window.confirm("Are you sure you want to delete?")) return;
+
+        Api.deleteUser(userId, (data) => {
+            this.setState({userList: this.state.userList.filter(function(user) {
+                return user._id !== userId
+            })});
+        })
     }
 
     render() {
@@ -28,7 +40,7 @@ class Home extends Component {
                     <div className="form-group">
                         <Link className="btn btn-success" to={"/create"}>Create New User</Link>
                     </div>
-                    <UserList userList={this.state.userList} />
+                    <UserList handleDelete={this.handleDelete} userList={this.state.userList} />
                 </div>
 
             </div>

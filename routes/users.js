@@ -24,6 +24,19 @@ router.get('/:id', function(req, res, next) {
     }
 });
 
+// DELETE user by id
+router.delete('/:id', function(req, res, next) {
+    const id = req.params.id;
+    let db = req.db;
+    let users = db.get('users');
+    try {
+        users.remove({ _id: id })
+        res.status(200).send({ msg: "success" });
+    } catch (e) {
+        res.status(400).send({ error: e.message });
+    }
+});
+
 // POST create new user
 router.post('/', function(req, res, next) {
     let db = req.db;

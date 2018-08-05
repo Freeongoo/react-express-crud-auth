@@ -20,3 +20,17 @@ Set correct login, password and db name
     $ db.createUser({user:"admin", pwd:"admin", roles:[{role:"readWrite", db:"user"}]})
     ```
     don't forget change password
+    
+## Run
+
+### Server
+in root dir:
+```
+npm run start
+```
+
+### Client
+```
+cd client
+npm run start
+```

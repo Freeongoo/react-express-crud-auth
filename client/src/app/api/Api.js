@@ -18,6 +18,19 @@ export default {
             })
     },
 
+    deleteUser(id, success) {
+        fetch("/users/" + id,
+            {
+                method: "DELETE",
+            })
+            .then(status)
+            .then(json)
+            .then(success)
+            .catch(function (error) {
+                console.log('error', error)
+            });
+    },
+
     createNewUser(data, success) {
         fetch("/users",
             {

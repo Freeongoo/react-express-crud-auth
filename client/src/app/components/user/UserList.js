@@ -23,6 +23,8 @@ export default function UserList(props) {
                             <td>{item.email}</td>
                             <td>
                                 <Link className="btn btn-primary" to={"/user/" + item._id}>edit</Link>
+                                &nbsp;
+                                <button onClick={() => props.handleDelete(item._id)} className="btn btn-danger">delete</button>
                             </td>
                         </tr>
                     )
