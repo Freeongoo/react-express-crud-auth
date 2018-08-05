@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import Navigation from "../../components/nav/Navigation"
 import Api from "../../api/Api"
 import FormData from "../../components/user/FormData"
-import { Redirect } from "react-router-dom";
+import { Redirect } from "react-router-dom"
 
 class UserCreate extends Component {
 
@@ -34,10 +34,6 @@ class UserCreate extends Component {
                 [event.target.name]: event.target.value
             }
         })
-    }
-
-    componentDidMount() {
-
     }
 
     render() {

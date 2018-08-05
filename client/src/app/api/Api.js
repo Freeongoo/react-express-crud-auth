@@ -35,6 +35,24 @@ export default {
                 console.log('error', error)
             });
     },
+
+    updateUser(id, data, success) {
+        fetch("/users/" + id,
+            {
+                method: "PATCH",
+                headers: {
+                    'Accept': 'application/json, text/plain, */*',
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify(data)
+            })
+            .then(status)
+            .then(json)
+            .then(success)
+            .catch(function (error) {
+                console.log('error', error)
+            });
+    }
 }
 
 function status(response) {

@@ -3,6 +3,7 @@ import Navigation from "../../components/nav/Navigation"
 import Api from "../../api/Api"
 import _ from 'lodash'
 import FormData from "../../components/user/FormData"
+import { Redirect } from "react-router-dom"
 
 class UserEdit extends Component {
 
@@ -11,11 +12,31 @@ class UserEdit extends Component {
 
         this.state = {
             user: {
+                _id: '',
                 firstName: '',
                 lastName: '',
                 email: ''
-            }
+            },
+            isRedirectToList: false
         }
+
+        this.handleChange = this.handleChange.bind(this);
+        this.handleSubmit = this.handleSubmit.bind(this);
+    }
+
+    handleSubmit(event) {
+        event.preventDefault();
+        console.log(this.state.user._id)
+        Api.updateUser(this.state.user._id, this.state.user, () => {this.setState({isRedirectToList: true})})
+    }
+
+    handleChange (event) {
+        this.setState({
+            user: {
+                ...this.state.user,
+                [event.target.name]: event.target.value
+            }
+        })
     }
 
     componentDidMount() {
@@ -27,9 +48,15 @@ class UserEdit extends Component {
 
     render() {
 
+        const { isRedirectToList } = this.state;
+
+        if (isRedirectToList) {
+            return <Redirect to="/" />;
+        }
+
         let content = _.isEmpty(this.state.user) ?
             <p>Sorry, user not found</p> :
-            <FormData user={this.state.user}/>
+            <FormData handleChange={this.handleChange} handleSubmit={this.handleSubmit} user={this.state.user}/>
 
         return (
             <div>
