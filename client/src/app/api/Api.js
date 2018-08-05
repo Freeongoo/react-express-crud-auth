@@ -1,7 +1,10 @@
+const USER_PREFIX_URL = '/users/'
+
 export default {
 
     getUserList(success) {
-        fetch('/users')
+        fetch(USER_PREFIX_URL)
+            .then(status)
             .then((res) => res.json())
             .then(success)
             .catch((error) => {
@@ -10,7 +13,8 @@ export default {
     },
 
     getUserById(id, success) {
-        fetch('/users/' + id)
+        fetch(USER_PREFIX_URL + id)
+            .then(status)
             .then((res) => res.json())
             .then(success)
             .catch((error) => {
@@ -19,12 +23,12 @@ export default {
     },
 
     deleteUser(id, success) {
-        fetch("/users/" + id,
+        fetch(USER_PREFIX_URL + id,
             {
                 method: "DELETE",
             })
             .then(status)
-            .then(json)
+            .then((res) => res.json())
             .then(success)
             .catch(function (error) {
                 console.log('error', error)
@@ -32,17 +36,14 @@ export default {
     },
 
     createNewUser(data, success) {
-        fetch("/users",
+        fetch(USER_PREFIX_URL,
             {
                 method: "POST",
-                headers: {
-                    'Accept': 'application/json, text/plain, */*',
-                    'Content-Type': 'application/json'
-                },
+                headers: getJsonHeader(),
                 body: JSON.stringify(data)
             })
             .then(status)
-            .then(json)
+            .then((res) => res.json())
             .then(success)
             .catch(function (error) {
                 console.log('error', error)
@@ -50,21 +51,25 @@ export default {
     },
 
     updateUser(id, data, success) {
-        fetch("/users/" + id,
+        fetch(USER_PREFIX_URL + id,
             {
                 method: "PATCH",
-                headers: {
-                    'Accept': 'application/json, text/plain, */*',
-                    'Content-Type': 'application/json'
-                },
+                headers: getJsonHeader(),
                 body: JSON.stringify(data)
             })
             .then(status)
-            .then(json)
+            .then((res) => res.json())
             .then(success)
             .catch(function (error) {
                 console.log('error', error)
             });
+    }
+}
+
+function getJsonHeader() {
+    return {
+        'Accept': 'application/json, text/plain, */*',
+        'Content-Type': 'application/json'
     }
 }
 
@@ -74,8 +79,4 @@ function status(response) {
     } else {
         return Promise.reject(new Error(response.statusText))
     }
-}
-
-function json(response) {
-    return response.json()
 }
