@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import Navigation from "../../components/nav/Navigation"
 import Api from "../../api/Api"
 import FormData from "../../components/user/FormData"
-import { Redirect } from "react-router-dom"
+import { Redirect, withRouter } from "react-router-dom"
 
 class UserEdit extends Component {
 
@@ -16,7 +16,6 @@ class UserEdit extends Component {
                 lastName: '',
                 email: ''
             },
-            isRedirectToList: false,
             isNotFoundUser: false
         }
 
@@ -27,7 +26,7 @@ class UserEdit extends Component {
     handleSubmit(event) {
         event.preventDefault();
         Api.updateUser(this.state.user._id, this.state.user)
-            .then(() => {this.setState({isRedirectToList: true})})
+            .then(() => {this.props.history.push('/')})
             .catch((error) => {
                 // TODO: correct handle error
                 console.log('error', error)
@@ -61,13 +60,6 @@ class UserEdit extends Component {
     }
 
     render() {
-
-        const { isRedirectToList } = this.state;
-
-        if (isRedirectToList) {
-            return <Redirect to="/" />;
-        }
-
         let content = this.state.isNotFoundUser ?
             <p>Sorry, user not found</p> :
             <FormData handleChange={this.handleChange} handleSubmit={this.handleSubmit} user={this.state.user}/>
@@ -86,4 +78,4 @@ class UserEdit extends Component {
     }
 }
 
-export default UserEdit
+export default withRouter(UserEdit)

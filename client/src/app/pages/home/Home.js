@@ -10,7 +10,8 @@ class Home extends Component {
     constructor() {
         super()
         this.state = {
-            userList: []
+            userList: [],
+            isLoading: true
         }
 
         this.handleDelete = this.handleDelete.bind(this);
@@ -22,6 +23,9 @@ class Home extends Component {
             .catch((error) => {
                 // TODO: correct handle error
                 console.log('error', error)
+            })
+            .finally(() => {
+                this.setState({isLoading: false})
             })
     }
 
@@ -50,7 +54,10 @@ class Home extends Component {
                     <div className="form-group">
                         <Link className="btn btn-success" to={"/create"}>Create New User</Link>
                     </div>
-                    <UserList handleDelete={this.handleDelete} userList={this.state.userList} />
+                    { this.state.isLoading ?
+                        <p>Loading...</p> :
+                        <UserList onDelete={this.handleDelete} userList={this.state.userList} /> }
+
                 </div>
 
             </div>

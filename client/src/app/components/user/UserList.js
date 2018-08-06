@@ -1,5 +1,5 @@
 import React from 'react'
-import {Link} from "react-router-dom"
+import UserListRow from "./UserListRow";
 
 export default function UserList(props) {
     return (
@@ -14,21 +14,14 @@ export default function UserList(props) {
                 </tr>
             </thead>
             <tbody>
-                {props.userList.map((item, index) => {
-                    return (
-                        <tr key={item._id}>
-                            <th scope="row">{++index}</th>
-                            <td>{item.firstName}</td>
-                            <td>{item.lastName}</td>
-                            <td>{item.email}</td>
-                            <td>
-                                <Link className="btn btn-primary" to={"/user/" + item._id}>edit</Link>
-                                &nbsp;
-                                <button onClick={() => props.handleDelete(item._id)} className="btn btn-danger">delete</button>
-                            </td>
-                        </tr>
-                    )
-                })}
+                {props.userList.map((item, index) => (
+                    <UserListRow
+                        key={item._id}
+                        index={++index}
+                        data={item}
+                        onDelete={props.onDelete}
+                    />
+                ))}
             </tbody>
         </table>
     )
