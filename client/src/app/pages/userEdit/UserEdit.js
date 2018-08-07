@@ -50,6 +50,7 @@ class UserEdit extends Component {
         Api.getUserById(currentUserId)
             .then((data) => {this.setState({user: data})})
             .catch((error) => {
+                console.log(error)
                 if (error.response.status === 404) {
                     this.setState({isNotFoundUser: true})
                 } else {
