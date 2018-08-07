@@ -1,11 +1,15 @@
 let ResponseUtil = {
-    sendErrorResponse(res, code, message) {
+    sendResponse(res, code, message) {
         res.statusMessage = message
-        res.status(code).send({message});
+        res.status(code).send({message})
+    },
+
+    sendSuccessResponse(res, message) {
+        this.sendResponse(res, 200, message)
     },
 
     send404Response(res, message) {
-        this.sendErrorResponse(res, 404, message)
+        this.sendResponse(res, 404, message)
     },
 
     sendExceptionResponse(req, res, err, code = null) {

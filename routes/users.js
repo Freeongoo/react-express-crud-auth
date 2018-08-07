@@ -6,9 +6,13 @@ const ResponseUtil = require("../util/ResponseUtil")
 // GET users listing
 router.get('/', function(req, res, next) {
     let users = req.db.get('users')
-    users.find({},{}, function(e, data){
-        res.json(data)
-    })
+    users.find({})
+        .then((data) => {
+            res.json(data)
+        })
+        .catch((e) => {
+            ResponseUtil.sendExceptionResponse(req, res, e)
+        })
 })
 
 // GET user info by id
@@ -24,7 +28,7 @@ router.get('/:id', function(req, res, next) {
             else res.json(data)
         })
         .catch((e) => {
-            ResponseUtil.sendExceptionResponse(req, res, e)
+            ResponseUtil.sendExceptionResponse(req, res, e, 400)
         })
 
 })
@@ -33,12 +37,16 @@ router.get('/:id', function(req, res, next) {
 router.delete('/:id', function(req, res, next) {
     const id = req.params.id
     let users = req.db.get('users')
-    try {
-        users.remove({ _id: id })
-        res.status(200).send({ msg: "success" })
-    } catch (e) {
-        res.status(400).send({ error: e.message })
-    }
+
+    Util.validateObjectId(id)
+
+    users.remove({ _id: id })
+        .then(() => {
+            ResponseUtil.sendSuccessResponse(res, "success")
+        })
+        .catch((e) => {
+            ResponseUtil.sendExceptionResponse(req, res, e, 400)
+        })
 })
 
 // POST create new user
@@ -49,22 +57,24 @@ router.post('/', function(req, res, next) {
 
     let users = req.db.get('users')
     users.insert({
-        firstName,
-        lastName,
-        email
-    }, function (error, doc) {
-        if (error) {
-            res.status(400).send({ error: "Could not create new user." })
-        } else {
-            res.status(200).send({ msg: "success" })
-        }
-    })
+            firstName,
+            lastName,
+            email
+        })
+        .then(() => {
+            ResponseUtil.sendSuccessResponse(res, "success")
+        })
+        .catch((e) => {
+            ResponseUtil.sendExceptionResponse(req, res, e, 400)
+        })
 })
 
 // PATCH edit user
 router.patch('/:id', function(req, res, next) {
     const id = req.params.id
     let users = req.db.get('users')
+
+    Util.validateObjectId(id)
 
     let firstName = req.body.firstName
     let lastName = req.body.lastName
@@ -76,14 +86,12 @@ router.patch('/:id', function(req, res, next) {
         email
     }
 
-    users.update({ _id: id },
-        { $set: updatedUser },
-        function (error, doc) {
-            if (error) {
-                res.status(400).send({ error: error.message })
-            } else {
-                res.status(200).send({ msg: "success" })
-            }
+    users.update({ _id: id }, { $set: updatedUser })
+        .then(() => {
+            ResponseUtil.sendSuccessResponse(res, "success")
+        })
+        .catch((e) => {
+            ResponseUtil.sendExceptionResponse(req, res, e, 400)
         })
 })
 

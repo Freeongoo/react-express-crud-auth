@@ -1,15 +1,15 @@
 class NotFoundException extends Error {
     constructor(message, status) {
-        super();
+        super()
 
-        Error.captureStackTrace(this, this.constructor);
+        Error.captureStackTrace(this, this.constructor)
 
-        this.name = this.constructor.name;
+        this.name = this.constructor.name
 
         this.message = message
 
-        this.status = status || 404;
+        this.status = status || 404
     }
 }
 
-module.exports = NotFoundException;
+module.exports = NotFoundException
