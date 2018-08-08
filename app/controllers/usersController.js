@@ -1,5 +1,6 @@
 const ResponseUtil = require("../util/ResponseUtil");
 const UserUtil = require("../util/UserUtil");
+const _ = require("lodash")
 
 exports.findAll = (req, res) => {
     let users = req.db.get('users')
@@ -46,7 +47,9 @@ exports.delete = (req, res) => {
 }
 
 exports.create = (req, res) => {
-    if (!req.body)
+    console.log(req.body)
+
+    if (_.isEmpty(req.body))
         return ResponseUtil.send400Response(res, "User content can not be empty")
 
     let firstName = req.body.firstName
@@ -77,7 +80,7 @@ exports.update = (req, res) => {
     if (!UserUtil.isValidUserId(id))
         return ResponseUtil.send404Response(res, "Not exist user id")
 
-    if (!req.body)
+    if (_.isEmpty(req.body))
         return ResponseUtil.send400Response(res, "User content can not be empty")
 
     let firstName = req.body.firstName
