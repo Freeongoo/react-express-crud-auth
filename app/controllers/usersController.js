@@ -14,11 +14,11 @@ exports.findAll = (req, res) => {
 
 exports.findOne = (req, res) => {
     const id = req.params.id
-    let users = req.db.get('users')
 
     if (!UserUtil.isValidUserId(id))
         return ResponseUtil.send404Response(res, "Not exist user id")
 
+    let users = req.db.get('users')
     users.findOne({_id: id})
         .then(data => {
             if (!data) ResponseUtil.send404Response(res, "User not found")
@@ -31,11 +31,11 @@ exports.findOne = (req, res) => {
 
 exports.delete = (req, res) => {
     const id = req.params.id
-    let users = req.db.get('users')
 
     if (!UserUtil.isValidUserId(id))
         return ResponseUtil.send404Response(res, "Not exist user id")
 
+    let users = req.db.get('users')
     users.remove({ _id: id })
         .then(() => {
             ResponseUtil.sendSuccessResponse(res, "success")
@@ -53,12 +53,16 @@ exports.create = (req, res) => {
     let lastName = req.body.lastName
     let email = req.body.email
 
-    let users = req.db.get('users')
-    users.insert({
+    let newUser = {
         firstName,
         lastName,
         email
-    })
+    }
+
+    // TODO: validate newUser
+
+    let users = req.db.get('users')
+    users.insert(newUser)
         .then(() => {
             ResponseUtil.sendSuccessResponse(res, "User successfully created")
         })
@@ -69,7 +73,6 @@ exports.create = (req, res) => {
 
 exports.update = (req, res) => {
     const id = req.params.id
-    let users = req.db.get('users')
 
     if (!UserUtil.isValidUserId(id))
         return ResponseUtil.send404Response(res, "Not exist user id")
@@ -87,6 +90,9 @@ exports.update = (req, res) => {
         email
     }
 
+    // TODO: validate updatedUser
+
+    let users = req.db.get('users')
     users.update({ _id: id }, { $set: updatedUser })
         .then(() => {
             ResponseUtil.sendSuccessResponse(res, "User successfully updated")
