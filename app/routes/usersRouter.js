@@ -9,6 +9,7 @@ router.get('/', userController.findAll)
 router.post('/', userController.create)
 
 // POST search
+// TODO: change - add param fieldName:
 router.post('/search', userController.search)
 
 // GET user info by id
