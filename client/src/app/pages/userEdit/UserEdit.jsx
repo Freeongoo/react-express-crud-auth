@@ -2,7 +2,7 @@ import React, {Component} from 'react'
 import Navigation from "../../components/nav/Navigation"
 import Api from "../../api/Api"
 import FormData from "../../components/user/FormData"
-import { Redirect, withRouter } from "react-router-dom"
+import { withRouter } from "react-router-dom"
 
 class UserEdit extends Component {
 

@@ -1,5 +1,5 @@
-const ResponseUtil = require("../util/ResponseUtil");
-const UserUtil = require("../util/UserUtil");
+const ResponseUtil = require("../util/ResponseUtil")
+const UserUtil = require("../util/UserUtil")
 const _ = require("lodash")
 
 exports.findAll = (req, res) => {
@@ -47,8 +47,6 @@ exports.delete = (req, res) => {
 }
 
 exports.create = (req, res) => {
-    console.log(req.body)
-
     if (_.isEmpty(req.body))
         return ResponseUtil.send400Response(res, "User content can not be empty")
 
@@ -70,6 +68,49 @@ exports.create = (req, res) => {
             ResponseUtil.sendSuccessResponse(res, "User successfully created")
         })
         .catch((e) => {
+            ResponseUtil.sendExceptionResponse(req, res, e)
+        })
+}
+
+exports.search = (req, res) => {
+    if (_.isEmpty(req.body))
+        return ResponseUtil.send400Response(res, "Search query cannot be empty")
+
+    let query = req.body.query
+
+    // TODO: validate query
+
+    let users = req.db.get('users')
+
+    let queryRequest = {
+        $or: [
+            {
+                firstName: {
+                    $regex: query,
+                    $options: 'i' // i: ignore case, m: multiline, etc
+                }
+            },
+            {
+                lastName: {
+                    $regex: query,
+                    $options: 'i'
+                }
+            },
+            {
+                email: {
+                    $regex: query,
+                    $options: 'i'
+                }
+            }
+        ]
+    };
+
+    users.find(queryRequest)
+        .then(data => {
+            if (!data) ResponseUtil.send404Response(res, "User not found")
+            else res.json(data)
+        })
+        .catch(e => {
             ResponseUtil.sendExceptionResponse(req, res, e)
         })
 }

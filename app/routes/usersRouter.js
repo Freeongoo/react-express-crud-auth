@@ -8,6 +8,9 @@ router.get('/', userController.findAll)
 // POST create new user
 router.post('/', userController.create)
 
+// POST search
+router.post('/search', userController.search)
+
 // GET user info by id
 router.get('/:id', userController.findOne)
 

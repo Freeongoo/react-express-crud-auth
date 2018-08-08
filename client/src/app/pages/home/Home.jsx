@@ -4,7 +4,8 @@ import Navigation from "../../components/nav/Navigation"
 import Api from "../../api/Api"
 import {Link} from "react-router-dom"
 import UserList from "../../components/user/UserList"
-import Search from "../../components/search/Search";
+import Search from "../../components/search/Search"
+import _ from "lodash"
 
 class Home extends Component {
 
@@ -20,6 +21,10 @@ class Home extends Component {
     }
 
     componentDidMount() {
+        this._getUserListFromApi()
+    }
+
+    _getUserListFromApi() {
         Api.getUserList()
             .then(data => {this.setState({userList: data})})
             .catch(error => {
@@ -31,12 +36,27 @@ class Home extends Component {
             })
     }
 
-    handleSearch(text) {
-        console.log(text)
+    handleSearch(query) {
+        if (_.isEmpty(query)) {
+            this._getUserListFromApi();
+            return;
+        }
+
+        this.setState({isLoading: true})
+
+        Api.filterUserList(query)
+            .then(data => {this.setState({userList: data})})
+            .catch(error => {
+                // TODO: correct handle error
+                console.log('error', error)
+            })
+            .finally(() => {
+                this.setState({isLoading: false})
+            })
     }
 
     handleDelete(userId) {
-        if (!window.confirm("Are you sure you want to delete?")) return;
+        if (!window.confirm("Are you sure you want to delete?")) return
 
         Api.deleteUser(userId)
             .then(() => {
@@ -44,7 +64,7 @@ class Home extends Component {
                     return user._id !== userId
                 })});
             })
-            .catch((error) => {
+            .catch(error => {
                 // TODO: correct handle error
                 console.log('error', error)
             })

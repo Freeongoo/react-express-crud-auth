@@ -1,9 +1,19 @@
 const USER_PREFIX_URL = '/users/'
 
 export default {
-
     getUserList() {
         return fetch(USER_PREFIX_URL)
+            .then(handleStatus)
+            .then((res) => res.json())
+    },
+
+    filterUserList(query) {
+        return fetch(USER_PREFIX_URL + 'search',
+            {
+                method: "POST",
+                headers: getJsonHeader(),
+                body: JSON.stringify({query: query})
+            })
             .then(handleStatus)
             .then((res) => res.json())
     },
