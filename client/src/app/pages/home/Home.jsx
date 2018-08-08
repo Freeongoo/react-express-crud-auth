@@ -4,6 +4,7 @@ import Navigation from "../../components/nav/Navigation"
 import Api from "../../api/Api"
 import {Link} from "react-router-dom"
 import UserList from "../../components/user/UserList"
+import Search from "../../components/search/Search";
 
 class Home extends Component {
 
@@ -15,18 +16,23 @@ class Home extends Component {
         }
 
         this.handleDelete = this.handleDelete.bind(this);
+        this.handleSearch = this.handleSearch.bind(this);
     }
 
     componentDidMount() {
         Api.getUserList()
-            .then((data) => {this.setState({userList: data})})
-            .catch((error) => {
+            .then(data => {this.setState({userList: data})})
+            .catch(error => {
                 // TODO: correct handle error
                 console.log('error', error)
             })
             .finally(() => {
                 this.setState({isLoading: false})
             })
+    }
+
+    handleSearch(text) {
+        console.log(text)
     }
 
     handleDelete(userId) {
@@ -50,10 +56,14 @@ class Home extends Component {
                 <Navigation/>
 
                 <div className="main-container container">
+
                     <h1>User list</h1>
-                    <div className="form-group">
+
+                    <div className="form-group panel-top">
                         <Link className="btn btn-success" to={"/create"}>Create New User</Link>
+                        <Search onSearch={this.handleSearch}/>
                     </div>
+
                     { this.state.isLoading ?
                         <p>Loading...</p> :
                         <UserList onDelete={this.handleDelete} userList={this.state.userList} /> }
