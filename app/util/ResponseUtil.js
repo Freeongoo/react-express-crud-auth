@@ -1,7 +1,7 @@
 let ResponseUtil = {
     sendResponse(res, code, message) {
         res.statusMessage = message
-        res.status(code).send({message})
+        res.status(code).send(this._commonResponseInfo(message, code))
     },
 
     sendSuccessResponse(res, message) {
@@ -12,16 +12,22 @@ let ResponseUtil = {
         this.sendResponse(res, 404, message)
     },
 
+    send400Response(res, message) {
+        this.sendResponse(res, 400, message)
+    },
+
     sendExceptionResponse(req, res, err, code = null) {
         let isDev = req.app.get('env') === 'development'
+
+        // set statusCode
         let statusCode = code ? code : err.status
+        statusCode = statusCode || 500
 
         res.statusMessage = err.message
         res.status(statusCode)
 
         let info = {
-            statusCode: statusCode,
-            message: err.message,
+            ...this._commonResponseInfo(err.message, statusCode),
             error: err.name,
         }
 
@@ -31,6 +37,13 @@ let ResponseUtil = {
             ...info,
             errorTrack: err.stack
         })
+    },
+
+    _commonResponseInfo(message, code) {
+        return {
+            statusCode: code,
+            message: message
+        }
     }
 }
 

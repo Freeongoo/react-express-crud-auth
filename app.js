@@ -1,4 +1,4 @@
-const ResponseUtil = require("./util/ResponseUtil");
+const ResponseUtil = require("./app/util/ResponseUtil");
 const createError = require('http-errors');
 const express = require('express');
 const path = require('path');
@@ -10,8 +10,8 @@ const monk = require('monk');
 const conn = require('./db/conn');
 const db = monk(conn.url);
 
-const indexRouter = require('./routes/index');
-const usersRouter = require('./routes/users');
+const indexRouter = require('./app/routes/indexRouter');
+const usersRouter = require('./app/routes/usersRouter');
 
 const app = express();
 app.use(bodyParser.urlencoded({extended: true}))
@@ -42,8 +42,6 @@ app.use(function (err, req, res, next) {
     // set locals, only providing error in development
     res.locals.message = err.message;
     res.locals.error = isDev ? err : {};
-
-    err.status = err.status || 500
 
     ResponseUtil.sendExceptionResponse(req, res, err)
 });
