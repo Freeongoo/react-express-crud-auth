@@ -1,7 +1,5 @@
 const express = require('express')
 const router = express.Router()
-const Util = require('../util/Util')
-const ResponseUtil = require("../util/ResponseUtil")
 const userController = require("../controllers/usersController")
 
 // GET users listing
