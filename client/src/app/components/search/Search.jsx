@@ -8,6 +8,8 @@ export default class Search extends Component {
             query: ''
         }
 
+        this.prevQuery = ''
+
         this.handleSearch = this.handleSearch.bind(this);
         this.handleChange = this.handleChange.bind(this);
     }
@@ -15,9 +17,11 @@ export default class Search extends Component {
     handleSearch (event) {
         event.preventDefault()
 
-        // TODO: prevent call onSearch - when not changed query
-
-        this.props.onSearch(this.state.query)
+        // prevent call onSearch - when not changed query
+        if (this.prevQuery !== this.state.query) {
+            this.prevQuery = this.state.query
+            this.props.onSearch(this.state.query)
+        }
     }
 
     handleChange (event) {
