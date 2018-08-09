@@ -6,6 +6,21 @@ let Util = {
     validateObjectId(id) {
         if (!mongodb.ObjectID.isValid(id))
             throw new InvalidObjectIdException("Invalid Object Id")
+    },
+
+    createMongoDbFilter(query, fields) {
+        let searchObj = fields.map((field) => {
+            return {
+                [field]: {
+                    $regex: query,
+                    $options: 'i'
+                }
+            }
+        })
+
+        return {
+            $or: searchObj
+        };
     }
 }
 

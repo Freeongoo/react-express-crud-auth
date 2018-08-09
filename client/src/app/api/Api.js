@@ -7,12 +7,12 @@ export default {
             .then((res) => res.json())
     },
 
-    filterUserList(query) {
+    filterUserList(searchReq) {
         return fetch(USER_PREFIX_URL + 'search',
             {
                 method: "POST",
                 headers: getJsonHeader(),
-                body: JSON.stringify({query: query})
+                body: JSON.stringify(searchReq)
             })
             .then(handleStatus)
             .then((res) => res.json())

@@ -1,5 +1,6 @@
 const ResponseUtil = require("../util/ResponseUtil")
 const UserUtil = require("../util/UserUtil")
+const Util = require("../util/Util")
 const _ = require("lodash")
 
 exports.findAll = (req, res) => {
@@ -77,33 +78,13 @@ exports.search = (req, res) => {
         return ResponseUtil.send400Response(res, "Search query cannot be empty")
 
     let query = req.body.query
+    let fields = req.body.fields;
 
-    // TODO: validate query
+    // TODO: validate query and fields
 
     let users = req.db.get('users')
 
-    let queryRequest = {
-        $or: [
-            {
-                firstName: {
-                    $regex: query,
-                    $options: 'i' // i: ignore case, m: multiline, etc
-                }
-            },
-            {
-                lastName: {
-                    $regex: query,
-                    $options: 'i'
-                }
-            },
-            {
-                email: {
-                    $regex: query,
-                    $options: 'i'
-                }
-            }
-        ]
-    };
+    let queryRequest = Util.createMongoDbFilter(query, fields)
 
     users.find(queryRequest)
         .then(data => {
