@@ -36,6 +36,12 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 app.use('/', indexRouter)
 app.use('/users', usersRouter)
 
+// for version
+// const v1 = express.Router()
+// v1.use('/', indexRouter)
+// v1.use('/users', usersRouter)
+// app.use('/api/v1', v1)
+
 // catch 404 and forward to error handler
 app.use(function (req, res, next) {
     next(createError(404))
