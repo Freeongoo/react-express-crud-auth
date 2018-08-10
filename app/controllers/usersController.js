@@ -2,40 +2,42 @@ const ResponseUtil = require("../util/ResponseUtil")
 const UserUtil = require("../util/UserUtil")
 const Util = require("../util/Util")
 const _ = require("lodash")
+const NotSetRequiredParamsException = require('../exceptions/NotSetRequiredParamsException')
+const NotFoundException = require('../exceptions/NotFoundException')
 
-exports.findAll = (req, res) => {
+exports.findAll = (req, res, next) => {
     let users = req.db.get('users')
     users.find({})
         .then(data => {
             res.json(data)
         })
         .catch(e => {
-            ResponseUtil.sendExceptionResponse(req, res, e)
+            return next(e)
         })
 }
 
-exports.findOne = (req, res) => {
+exports.findOne = (req, res, next) => {
     const id = req.params.id
 
     if (!UserUtil.isValidUserId(id))
-        return ResponseUtil.send404Response(res, "Not exist user id")
+        throw new NotFoundException("Not exist user id")
 
     let users = req.db.get('users')
     users.findOne({_id: id})
         .then(data => {
-            if (!data) ResponseUtil.send404Response(res, "User not found")
+            if (!data) throw new NotFoundException("User not found")
             else res.json(data)
         })
         .catch(e => {
-            ResponseUtil.sendExceptionResponse(req, res, e)
+            return next(e)
         })
 }
 
-exports.delete = (req, res) => {
+exports.delete = (req, res, next) => {
     const id = req.params.id
 
     if (!UserUtil.isValidUserId(id))
-        return ResponseUtil.send404Response(res, "Not exist user id")
+        throw new NotFoundException("Not exist user id")
 
     let users = req.db.get('users')
     users.remove({ _id: id })
@@ -43,13 +45,13 @@ exports.delete = (req, res) => {
             ResponseUtil.sendSuccessResponse(res, "success")
         })
         .catch((e) => {
-            ResponseUtil.sendExceptionResponse(req, res, e)
+            return next(e)
         })
 }
 
-exports.create = (req, res) => {
+exports.create = (req, res, next) => {
     if (_.isEmpty(req.body))
-        return ResponseUtil.send400Response(res, "User content can not be empty")
+        throw new NotSetRequiredParamsException("User content can not be empty")
 
     let firstName = req.body.firstName
     let lastName = req.body.lastName
@@ -69,13 +71,13 @@ exports.create = (req, res) => {
             ResponseUtil.sendSuccessResponse(res, "User successfully created")
         })
         .catch((e) => {
-            ResponseUtil.sendExceptionResponse(req, res, e)
+            return next(e)
         })
 }
 
-exports.search = (req, res) => {
+exports.search = (req, res, next) => {
     if (_.isEmpty(req.body))
-        return ResponseUtil.send400Response(res, "Search query cannot be empty")
+        throw new NotSetRequiredParamsException("Search query cannot be empty")
 
     let query = req.body.query
     let fields = req.body.fields;
@@ -88,22 +90,22 @@ exports.search = (req, res) => {
 
     users.find(queryRequest)
         .then(data => {
-            if (!data) ResponseUtil.send404Response(res, "User not found")
+            if (!data) throw new NotFoundException("User not found")
             else res.json(data)
         })
         .catch(e => {
-            ResponseUtil.sendExceptionResponse(req, res, e)
+            next(e)
         })
 }
 
-exports.update = (req, res) => {
+exports.update = (req, res, next) => {
     const id = req.params.id
 
     if (!UserUtil.isValidUserId(id))
-        return ResponseUtil.send404Response(res, "Not exist user id")
+        throw new NotFoundException("Not exist user id")
 
     if (_.isEmpty(req.body))
-        return ResponseUtil.send400Response(res, "User content can not be empty")
+        throw new NotSetRequiredParamsException("User content can not be empty")
 
     let firstName = req.body.firstName
     let lastName = req.body.lastName
@@ -123,6 +125,6 @@ exports.update = (req, res) => {
             ResponseUtil.sendSuccessResponse(res, "User successfully updated")
         })
         .catch((e) => {
-            ResponseUtil.sendExceptionResponse(req, res, e)
+            next(e)
         })
 }

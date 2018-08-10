@@ -8,6 +8,8 @@ const bodyParser = require('body-parser')
 const swaggerUi = require('swagger-ui-express')
 const monk = require('monk')
 
+const NotSetRequiredParamsException = require('./app/exceptions/NotSetRequiredParamsException')
+
 const swaggerDocument = require('./swagger.json')
 const conn = require('./db/conn')
 const db = monk(conn.url)
@@ -39,7 +41,7 @@ app.use(function (req, res, next) {
     next(createError(404))
 })
 
-// error handler
+// common error handler
 app.use(function (err, req, res, next) {
     let isDev = req.app.get('env') === 'development'
 

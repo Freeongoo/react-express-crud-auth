@@ -8,14 +8,6 @@ let ResponseUtil = {
         this.sendResponse(res, 200, message)
     },
 
-    send404Response(res, message) {
-        this.sendResponse(res, 404, message)
-    },
-
-    send400Response(res, message) {
-        this.sendResponse(res, 400, message)
-    },
-
     sendExceptionResponse(req, res, err, code = null) {
         let isDev = req.app.get('env') === 'development'
 
