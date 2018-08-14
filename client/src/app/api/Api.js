@@ -1,19 +1,13 @@
+import Util from "./Util"
+import _ from 'lodash'
+
 const USER_PREFIX_URL = '/users/'
 
 export default {
-    getUserList() {
-        return fetch(USER_PREFIX_URL)
-            .then(handleStatus)
-            .then((res) => res.json())
-    },
+    getUserList(searchReq = null) {
+        let urlParams = _.isEmpty(searchReq) ? '' : '?' + Util.convertObjToUrl(searchReq)
 
-    filterUserList(searchReq) {
-        return fetch(USER_PREFIX_URL + 'search',
-            {
-                method: "POST",
-                headers: getJsonHeader(),
-                body: JSON.stringify(searchReq)
-            })
+        return fetch(USER_PREFIX_URL + urlParams)
             .then(handleStatus)
             .then((res) => res.json())
     },

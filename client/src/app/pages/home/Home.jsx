@@ -45,11 +45,11 @@ class Home extends Component {
         this.setState({isLoading: true})
 
         let searchReq = {
-            query,
-            fields: ['firstName', 'lastName', 'email']
+            'query': query,
+            'fields[users]': ['firstName', 'lastName', 'email']
         }
 
-        Api.filterUserList(searchReq)
+        Api.getUserList(searchReq)
             .then(data => {this.setState({userList: data})})
             .catch(error => {
                 // TODO: correct handle error

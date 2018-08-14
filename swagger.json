@@ -31,6 +31,23 @@
         "produces": [
           "application/json"
         ],
+        "parameters": [
+          {
+            "in": "query",
+            "name": "query",
+            "description": "search",
+            "required": false,
+            "type": "string"
+          },
+          {
+            "in": "query",
+            "name": "fields[users]",
+            "description": "list of fields for search. Ex.: firstName, lastName",
+            "required": false,
+            "type": "string",
+            "pattern": "[^,]+"
+          }
+        ],
         "responses": {
           "default": {
             "description": "successful operation"

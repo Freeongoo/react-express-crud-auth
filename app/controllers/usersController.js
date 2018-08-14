@@ -5,9 +5,27 @@ const _ = require("lodash")
 const NotSetRequiredParamsException = require('../exceptions/NotSetRequiredParamsException')
 const NotFoundException = require('../exceptions/NotFoundException')
 
+const DEFAULT_SEARCH_USERS_FIELDS = 'firstName, lastName, email'
+
 exports.findAll = (req, res, next) => {
+    // detect search
+    let query = req.query.query
+    let fields = req.query.fields;
+
+    if (_.isEmpty(fields)) {
+        fields = {}
+        fields.users = DEFAULT_SEARCH_USERS_FIELDS
+    }
+
+    fields.users = fields.users.split(",").map(item => {
+        return item.trim();
+    })
+
+    let queryUsersRequest = (!_.isEmpty(query)) ? Util.createMongoDbFilter(query, fields.users) : {}
+
     let users = req.db.get('users')
-    users.find({})
+
+    users.find(queryUsersRequest)
         .then(data => {
             res.json(data)
         })
@@ -72,29 +90,6 @@ exports.create = (req, res, next) => {
         })
         .catch((e) => {
             return next(e)
-        })
-}
-
-exports.search = (req, res, next) => {
-    if (_.isEmpty(req.body))
-        throw new NotSetRequiredParamsException("Search query cannot be empty")
-
-    let query = req.body.query
-    let fields = req.body.fields;
-
-    // TODO: validate query and fields
-
-    let users = req.db.get('users')
-
-    let queryRequest = Util.createMongoDbFilter(query, fields)
-
-    users.find(queryRequest)
-        .then(data => {
-            if (!data) throw new NotFoundException("User not found")
-            else res.json(data)
-        })
-        .catch(e => {
-            next(e)
         })
 }
 
